@@ -56,6 +56,19 @@ logging "Clearing any Remote Repositories"
 
 
 
+WhichDataset () {
+
+debugging "Running the WhichDataset function"
+
+until [ "$DATASET" = "Xeneta" ] || [ "$DATASET" = "Other" ]
+do
+echo "What dataset do you want to release? (Xeneta | Other)
+"
+read DATASET
+done
+
+}
+
 NameThatRelease () {
 
 debugging "Running the NameThatRelease function"
@@ -403,6 +416,7 @@ debugging "Done."
 Main () {
 
 CanIConnectToAWS
+WhichDataset
 NameThatRelease
 NameThatStepFunctionVersion
 NameThatDatalakeETLVersion
