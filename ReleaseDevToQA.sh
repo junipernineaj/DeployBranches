@@ -6,10 +6,6 @@
 
 # Variables
 
-# Set the repositories externally (security)
-source ../REPOSITORIES.sh
-source ../CODEbuckets.sh
-
 DEBUG="Off"
 OIFS="$IFS"
 IFS=$'\n'
@@ -54,6 +50,25 @@ logging "Clearing any Remote Repositories"
 
 }
 
+
+WhichDataset () {
+
+debugging "Running the WhichDataset function"
+
+until [ "$DATASET" = "Xeneta" ] || [ "$DATASET" = "Other" ]
+do
+
+echo "Which Dataset do you want to deploy ? [ Xeneta | Other ]"
+read DATASET
+done
+
+# Set the repositories externally (security)
+source ../$DATASET-REPOSITORIES.sh
+source ../CODEbuckets.sh
+
+debugging "Deploying $DATASET"
+
+}
 
 
 NameThatRelease () {
@@ -227,10 +242,14 @@ debugging "Updating terraform.tfvars in QA Repository"
 
 cat terraform.tfvars | sed s/IcisDev/IcisQA/g > terraform.temp
 cat terraform.temp | sed s/"isdev = 1"/"isdev = 0"/g > terraform.tfvars
+
+if [ $DATASET = "Other" ]
+then
 cat << EOF >> terraform.tfvars
 needs_tableau_server_role=1
 trusted_tableau_server_aws_account="arn:aws:iam::512544833523:role/DataConsumerIcisQA-CHC-Assumed"
 EOF
+fi
 
 rm terraform.temp
 
@@ -403,6 +422,7 @@ debugging "Done."
 Main () {
 
 CanIConnectToAWS
+WhichDataset
 NameThatRelease
 NameThatStepFunctionVersion
 NameThatDatalakeETLVersion
