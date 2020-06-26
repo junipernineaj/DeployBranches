@@ -7,8 +7,8 @@
 # Variables
 
 # Set the repositories externally (security)
-source REPOSITORIES.sh
-source CODEbuckets.sh
+source ../REPOSITORIES.sh
+source ../CODEbuckets.sh
 
 DEBUG="Off"
 OIFS="$IFS"
@@ -114,7 +114,7 @@ CanIConnectToAWS () {
 debugging "Running the CanIConnectToAWS function"
 debugging "Listing existing Releases in Dev"
 
-source AWS.sh
+source ../AWS.sh
 aws s3 ls $DEVCODEBUCKET >> /dev/null
 
 if [ ! $? -eq 0 ]
@@ -207,6 +207,21 @@ debugging "Done."
 ## Updates to files
 ##
 
+UpdateVersionsAutoTFvarsForQA () {
+
+debugging "Updating versions.auto.tfvars in QA Repository"
+
+> versions.auto.tfvars
+
+cat << EOF >> versions.auto.tfvars
+datalake_version = "master"
+datalakeetl_version = "$RELEASENAME"
+platform_version = "$RELEASENAME"
+lambda_code_version = "$RELEASENAME"
+EOF
+}
+
+
 UpdateTFVARSforQA () {
 debugging "Updating terraform.tfvars in QA Repository"
 
@@ -242,6 +257,7 @@ EnvironmentSpecificChangesForQA () {
 debugging "Making Environment specific changes for QA"
 
 UpdateTFVARSforQA
+UpdateVersionsAutoTFvarsForQA
 RemoveTerraformVersion
 
 debugging "Done."
