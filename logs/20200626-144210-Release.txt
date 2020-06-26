@@ -1,3 +1,7 @@
 [TONYTEST-5 7f45c5b] Release: TONYTEST-5 taken on 20200626-144254
  2 files changed, 14 insertions(+)
  create mode 100644 logs/20200626-144210-Release.txt
+[TONYTEST-5 d0c0d4a] Release: TONYTEST-5 preparation
+ 3 files changed, 3 insertions(+)
+ create mode 100644 data_pipelines.tf
+ create mode 100644 main.tf
