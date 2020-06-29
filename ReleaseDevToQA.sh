@@ -159,10 +159,22 @@ SwitchToBranchFromMasterDevelopment () {
 
 debugging "Switching Branch from Master"
 
+case $DATASET in 
+
+Other)
 cat main.tf | sed s/master/$RELEASENAME/g > main.temp
 mv main.temp main.tf
 cat data_pipelines.tf | sed s/master/$RELEASENAME/g > data_pipelines.temp
 mv data_pipelines.temp data_pipelines.tf
+;;
+Xeneta)
+cat lambda.tf | sed s/master/$RELEASENAME/g > lambda.temp
+mv lambda.temp lambda.tf
+cat shared.tf | sed s/master/$RELEASENAME/g > shared.temp
+mv shared.temp shared.tf
+;;
+
+esac
 
 debugging "Done."
 
