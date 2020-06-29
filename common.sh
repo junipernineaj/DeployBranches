@@ -3,54 +3,122 @@
 
 # Script to prepare a release to QA from DEV
 # Inputs will be Release ID you want
-#
-# Relies on common.sh for commonly used functions
 
-source ./common.sh
+# Variables
 
-NameThatDatalakeETLVersion () {
+DEBUG="Off"
+OIFS="$IFS"
+IFS=$'\n'
+LOGDATETIMESTAMP=`date "+%Y%m%d-%H%M%S"`
 
-until [ $DATALAKE_ETL_VERSION ]
+REPOSITORY_PATH=$PWD
+LOGFILE=$REPOSITORY_PATH/logs/$LOGDATETIMESTAMP-Release.txt
+
+
+MODULES_DIRECTORY="Modules"
+DEV_DIRECTORY="Development"
+QA_DIRECTORY="QA"
+STAGING_DIRECTORY="Staging"
+PRODUCTION_DIRECTORY="Production"
+SANDBOX_DIRECTORY="Sandbox"
+
+mkdir $REPOSITORY_PATH/logs
+
+logging () {
+
+DATETIMESTAMP=`date "+%Y%m%d-%H%M%S"`
+MESSAGE=$1
+echo $DATETIMESTAMP - "$MESSAGE" >> $LOGFILE
+}
+
+debugging () {
+
+DATETIMESTAMP=`date "+%Y%m%d-%H%M%S"`
+MESSAGE=$1
+
+if [ $DEBUG == "On" ]
+then
+        echo $DATETIMESTAMP - "$MESSAGE" | tee -a $LOGFILE
+fi
+}
+
+ClearRemotes () {
+
+logging "Clearing any Remote Repositories"
+
+}
+
+
+WhichDataset () {
+
+debugging "Running the WhichDataset function"
+
+until [ "$DATASET" = "Xeneta" ] || [ "$DATASET" = "Other" ]
 do
 
-echo "Which Glue Code version do you want to use?
-"
-read DATALAKE_ETL_VERSION
+echo "Which Dataset do you want to deploy ? [ Xeneta | Other ]"
+read DATASET
 done
 
-debugging "Datalake ETL Release Version (Bitbucket): $DATALAKE_RELEASE_VERSION"
+# Set the repositories externally (security)
+source ../$DATASET-REPOSITORIES.sh
+source ../CODEbuckets.sh
 
+debugging "Deploying $DATASET"
 
 }
 
-NameThatStepFunctionVersion () {
 
-until [ $DATALAKE_STEPFUNCTION_VERSION ]
+NameThatRelease () {
+
+debugging "Running the NameThatRelease function"
+
+unset RELEASENAME
+aws s3 ls $DEVCODEBUCKET | sed s:"PRE"::g | sed s:/::g | sed s/" "//g
+
+RELEASEARRAY=`aws s3 ls $DEVCODEBUCKET | sed s:"PRE"::g | sed s:/::g | xargs`
+
+while [ ! $RELEASENAME ]
 do
-
-echo "Which Step Function Code version do you want to use?
+echo "What release name do you want to use?
 "
-read DATALAKE_STEPFUNCTION_VERSION
-
+read RELEASENAME
 done
 
-debugging "Datalake Step Function Release Version (Bitbucket): $DATALAKE_STEPFUNCTION_VERSION"
+
+}
+
+HaveIUsedThisReleaseAlready () {
+
+echo $RELEASEARRAY | grep $RELEASENAME >> /dev/null
+
+if [ $? -eq 0  ]
+then
+echo "You have already used that release"
+NameThatRelease
+fi
 
 }
 
 
-CreateAWSCodeBucket () {
+CanIConnectToAWS () {
 
-debugging "Running the CreateAWSCodeBucket function"
-debugging "Create New Code Buckets"
+debugging "Running the CanIConnectToAWS function"
+debugging "Listing existing Releases in Dev"
 
-aws s3 sync s3://$DEVCODEBUCKET/$DATALAKE_ETL_VERSION s3://$DEVCODEBUCKET/$RELEASENAME
-aws s3 sync s3://$DEVCODEBUCKET/$DATALAKE_ETL_VERSION s3://$QACODEBUCKET/$RELEASENAME
-aws s3 sync s3://$DEVCODEBUCKET/$DATALAKE_STEPFUNCTION_VERSION s3://$DEVCODEBUCKET/$RELEASENAME
-aws s3 sync s3://$DEVCODEBUCKET/$DATALAKE_STEPFUNCTION_VERSION s3://$QACODEBUCKET/$RELEASENAME
+source ../AWS.sh
+aws s3 ls $DEVCODEBUCKET >> /dev/null
 
-debugging "Done."
+if [ ! $? -eq 0 ]
+then
+debugging "I cannot connect to AWS... check your credentials and try again"
+debugging "exiting!"
+exit 1
+
+fi
+
 }
+
 
 SwitchToBranchFromMasterDevelopment () {
 
@@ -326,48 +394,3 @@ debugging "Done."
 
 }
 
-
-
-Main () {
-
-CanIConnectToAWS
-WhichDataset
-NameThatRelease
-HaveIUsedThisReleaseAlready
-#
-NameThatStepFunctionVersion
-NameThatDatalakeETLVersion
-
-
-#Create AWS Code Bucket
-
-CreateAWSCodeBucket
-
-#Take a cut of the Modules Repo
-
-CheckoutModules
-CreateBranchModules
-UpdatePlatformVersion
-CommitChangesToBranchModulesLocal
-CleanupModules
-
-#Create Release branch in the Main Dev Repo
-
-CheckoutDev
-CreateBranchDev
-
-#Checkout QA Repo and fetch Dev Release branch in
-
-CheckoutQA
-RemoteAddDev
-CheckoutRemoteBranchDev
-EnvironmentSpecificChangesForQA
-PushReleaseBranchToRemoteQA
-
-#CleanUp after yourself
-
-CleanupDev
-CleanupQA
-}
-
-Main
