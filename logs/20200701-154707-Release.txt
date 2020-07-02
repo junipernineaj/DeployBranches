@@ -1,0 +1,6 @@
+[0.5.0.4 64cb9e5] Release: 0.5.0.4 taken on 20200701-154734
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+[0.5.0.4 1733c69] Release: 0.5.0.4 preparation
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+[0.5.0.4 5bd85dd] Release: 0.5.0.4 taken on 20200701-154748
+ 3 files changed, 7 insertions(+), 6 deletions(-)

@@ -1,0 +1,6 @@
+[0.5.0.2 0519e26] Release: 0.5.0.2 taken on 20200630-093646
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+[0.5.0.2 1e912fc] Release: 0.5.0.2 preparation
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+[0.5.0.2 838f91f] Release: 0.5.0.2 taken on 20200630-093657
+ 3 files changed, 7 insertions(+), 6 deletions(-)

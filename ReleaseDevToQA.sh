@@ -13,7 +13,7 @@ NameThatDatalakeETLVersion () {
 until [ $DATALAKE_ETL_VERSION ]
 do
 
-echo "Which Glue Code version do you want to use?
+echo "Which Glue Code version (the jar file) do you want to use?
 "
 read DATALAKE_ETL_VERSION
 done
@@ -28,7 +28,7 @@ NameThatStepFunctionVersion () {
 until [ $DATALAKE_STEPFUNCTION_VERSION ]
 do
 
-echo "Which Step Function Code version do you want to use?
+echo "Which Lambda Code version (the Zip files) do you want to use?
 "
 read DATALAKE_STEPFUNCTION_VERSION
 
