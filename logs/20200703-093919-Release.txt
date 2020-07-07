@@ -1,0 +1,6 @@
+[0.5.0.7 234f68d] Release: 0.5.0.7 taken on 20200703-093947
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+[0.5.0.7 f09d24a] Release: 0.5.0.7 preparation
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+[0.5.0.7 fcb6fad] Release: 0.5.0.7 taken on 20200703-093959
+ 3 files changed, 7 insertions(+), 6 deletions(-)

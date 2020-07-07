@@ -59,15 +59,15 @@ debugging "Switching Branch from Master"
 case $DATASET in 
 
 Other)
-cat main.tf | sed s/master/$RELEASENAME/g > main.temp
+cat main.tf | sed s/ref=master/ref=$RELEASENAME/g > main.temp
 mv main.temp main.tf
-cat data_pipelines.tf | sed s/master/$RELEASENAME/g > data_pipelines.temp
+cat data_pipelines.tf | sed s/ref=master/ref=$RELEASENAME/g > data_pipelines.temp
 mv data_pipelines.temp data_pipelines.tf
 ;;
 Xeneta)
-cat lambda.tf | sed s/master/$RELEASENAME/g > lambda.temp
+cat lambda.tf | sed s/ref=master/ref=$RELEASENAME/g > lambda.temp
 mv lambda.temp lambda.tf
-cat shared.tf | sed s/master/$RELEASENAME/g > shared.temp
+cat shared.tf | sed s/ref=master/ref=$RELEASENAME/g > shared.temp
 mv shared.temp shared.tf
 ;;
 
