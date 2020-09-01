@@ -1,0 +1,9 @@
+[Cleardown cb71b8e] Release: Cleardown taken on 20200715-150024
+ 1 file changed, 4 insertions(+)
+[Cleardown 22ed780] Release: Cleardown preparation
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 lambda.tf
+ create mode 100644 shared.tf
+[Cleardown b8e7863] Release: Cleardown taken on 20200715-150033
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+ create mode 100644 versions.auto.tfvars

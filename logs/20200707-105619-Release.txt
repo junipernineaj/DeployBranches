@@ -1,0 +1,6 @@
+[0.5.0.12 8b7bda6] Release: 0.5.0.12 taken on 20200707-105650
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+[0.5.0.12 1d985f9] Release: 0.5.0.12 preparation
+ 2 files changed, 18 insertions(+), 18 deletions(-)
+[0.5.0.12 b9a5170] Release: 0.5.0.12 taken on 20200707-105706
+ 3 files changed, 7 insertions(+), 6 deletions(-)

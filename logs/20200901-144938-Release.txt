@@ -1,0 +1,6 @@
+[Release-1.0.0.0 3c7eb0c] Release: Release-1.0.0.0 taken on 20200901-145006
+ 1 file changed, 4 insertions(+)
+[Release-1.0.0.0 410a793] Release: Release-1.0.0.0 preparation
+ 2 files changed, 19 insertions(+), 19 deletions(-)
+[Release-1.0.0.0 c8bb6ef] Release: Release-1.0.0.0 taken on 20200901-145026
+ 4 files changed, 16 insertions(+), 58 deletions(-)

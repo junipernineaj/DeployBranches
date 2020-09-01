@@ -131,6 +131,73 @@ debugging "Done."
 ## Updates to files
 ##
 
+UpdateGitLabCIymlForQA () {
+debugging "Updating gitlab-ci.yml in Staging Repository"
+
+cat << EOF > .gitlab-ci.yml
+variables:
+  ## runner terraform-ci scripts
+  MASTER_SCRIPTS: "\${RUNNER_BASEDIR}/repos/terraform-ci-scripts"
+
+  ## runner terraform-ci config
+  MASTER_CONFIG:  "\${RUNNER_BASEDIR}/repos/terraform-ci-config"
+
+  ## path to the project in GitLab
+  TF_VAR_project_path: \$CI_PROJECT_PATH
+
+
+stages:
+  - verify
+  - plan
+  - apply
+
+before_script:
+  - . \$MASTER_SCRIPTS/pre-stage.sh
+
+after_script:
+  - . \$MASTER_SCRIPTS/post-stage.sh
+
+VERIFY-State:
+  stage: verify
+  script:
+    - . \$MASTER_SCRIPTS/stage-1_verify_saved_state.sh
+  except:
+    - state
+  tags:
+    - aws
+  allow_failure: true
+
+TERRAFORM-Plan:
+  stage: plan
+  script:
+    - . \$MASTER_SCRIPTS/stage-2_terraform_plan.sh
+  except:
+    - state
+  tags:
+    - aws
+  when: on_success
+  allow_failure: false
+
+TERRAFORM-Apply:
+  stage: apply
+  script:
+    - . \$MASTER_SCRIPTS/stage-3_terraform_apply.sh
+  except:
+    - state
+  only:
+    - master
+  tags:
+    - aws
+  when: manual
+  allow_failure: false
+
+EOF
+
+debugging "Done."
+
+}
+
+
 UpdateVersionsAutoTFvarsForQA () {
 
 debugging "Updating versions.auto.tfvars in QA Repository"
@@ -140,7 +207,7 @@ debugging "Updating versions.auto.tfvars in QA Repository"
 cat << EOF >> versions.auto.tfvars
 datalake_version = "master"
 datalakeetl_version = "$RELEASENAME"
-platform_version = "$RELEASENAME"
+trigger_version = "$RELEASENAME"
 lambda_code_version = "$RELEASENAME"
 EOF
 }
@@ -168,10 +235,10 @@ debugging "Done."
 UpdatePlatformVersion () {
 debugging "Updating Platform Version in Modules Repository"
 
-awk '/platform_version/{n=4}; n {n--; next}; 1' < modules/shared/output.tf > outfile
+awk '/trigger_version/{n=4}; n {n--; next}; 1' < modules/shared/output.tf > outfile
 mv outfile modules/shared/output.tf
 cat << EOF >> modules/shared/output.tf
-output "platform_version" {
+output "trigger_version" {
   description = "Version of the platform - in AWS $DEVCODEBUCKET"
   value = "$RELEASENAME"
 }
@@ -187,6 +254,7 @@ debugging "Making Environment specific changes for QA"
 UpdateTFVARSforQA
 UpdateVersionsAutoTFvarsForQA
 RemoveTerraformVersion
+UpdateGitLabCIymlForQA
 
 debugging "Done."
 

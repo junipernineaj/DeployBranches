@@ -1,0 +1,6 @@
+[1.0.0.0 f05a946] Release: 1.0.0.0 taken on 20200901-144646
+ 1 file changed, 4 insertions(+)
+[1.0.0.0 5e47c1f] Release: 1.0.0.0 preparation
+ 2 files changed, 19 insertions(+), 19 deletions(-)
+[1.0.0.0 9d2201e] Release: 1.0.0.0 taken on 20200901-144707
+ 4 files changed, 16 insertions(+), 58 deletions(-)
